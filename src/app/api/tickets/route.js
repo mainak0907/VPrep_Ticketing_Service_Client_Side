@@ -34,7 +34,7 @@ export async function POST(request) {
   }
 }
 
-export async function GET(request) {
+export async function GET() { // Removed 'request' parameter here
   try {
     // Connect to the database
     await dbConnect();
