@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 export default function ViewTickets() {
   const [tickets, setTickets] = useState([]);
   const [filter, setFilter] = useState('');
-  const [showReplies, setShowReplies] = useState({}); // To track visibility of replies for each ticket
+  const [showReplies, setShowReplies] = useState({});
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -14,19 +14,15 @@ export default function ViewTickets() {
       setTickets(data);
     };
 
-    fetchTickets(); // Fetch initially
-
-    // Set interval to refresh every 180 seconds
-    const intervalId = setInterval(fetchTickets, 180000); // 180000 ms = 180 seconds
-
-    // Cleanup interval on component unmount
+    fetchTickets();
+    const intervalId = setInterval(fetchTickets, 180000);
     return () => clearInterval(intervalId);
   }, []);
 
   const toggleReplyVisibility = (ticketId) => {
     setShowReplies((prevState) => ({
       ...prevState,
-      [ticketId]: !prevState[ticketId], // Toggle visibility of the reply
+      [ticketId]: !prevState[ticketId],
     }));
   };
 
@@ -50,7 +46,7 @@ export default function ViewTickets() {
           <li><Link href="/view">View Tickets</Link></li>
         </ul>
       </nav>
-      <div className="min-h-screen bg-gray-100 p-6">
+      <div className="min-h-screen p-6" style={{ backgroundColor: "#facbcb" }}>
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-center text-black mb-6">View Tickets</h1>
           <div className="mb-4">
@@ -69,38 +65,30 @@ export default function ViewTickets() {
           </div>
           <ul className="space-y-4">
             {filteredTickets.map((ticket) => (
-              <li key={ticket._id} className="bg-white shadow-lg p-4 rounded-md relative">
+              <li key={ticket._id} className="bg-white shadow-md p-6 rounded-lg border-l-4 border-blue-500 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-black">{ticket.companyName}</h3>
-                    <p className="text-black">{ticket.issue}</p>
-                    <span className="block mt-2 text-sm text-black">Category: {ticket.category}</span>
+                    <h3 className="text-xl font-semibold text-green-800">{ticket.companyName}</h3>
+                    <p className="text-black mt-1">{ticket.issue}</p>
+                    <span className="block mt-2 text-sm text-gray-700">Category: <span className="font-semibold">{ticket.category}</span></span>
                   </div>
-
-                  {/* Email, Roll No, and Status */}
                   <div className="text-right text-sm text-gray-600">
-                    <p>Email: {ticket.email}</p>
-                    <p>Roll No: {ticket.rollNumber}</p>
-                    {/* Display status with color */}
+                    <p>Email: <span className="font-medium">{ticket.email}</span></p>
+                    <p>Roll No: <span className="font-medium">{ticket.rollNumber}</span></p>
                     <p className={`text-sm mt-2 font-bold ${ticket.status === 'Open' ? 'text-green-500' : 'text-red-500'}`}>
                       Status: {ticket.status}
                     </p>
-                    {/* Format and show creation time */}
-                    <p className="text-sm text-black">Created: {formatDate(ticket.createdAt)}</p>
+                    <p className="text-sm text-gray-500">Created: {formatDate(ticket.createdAt)}</p>
                   </div>
                 </div>
-
-                {/* View Reply Button */}
                 <button
                   onClick={() => toggleReplyVisibility(ticket._id)}
-                  className="mt-4 text-blue-600 underline"
+                  className="mt-4 text-blue-500 underline hover:text-blue-700 focus:outline-none"
                 >
                   {showReplies[ticket._id] ? 'Hide Reply' : 'View Reply'}
                 </button>
-
-                {/* Show reply if the button is clicked */}
                 {showReplies[ticket._id] && (
-                  <div className="mt-2 p-4 bg-gray-200 rounded-md">
+                  <div className="mt-2 p-4 bg-gray-100 rounded-md border border-gray-300">
                     <p className="text-black">{ticket.reply || 'No reply yet.'}</p>
                   </div>
                 )}
@@ -110,7 +98,6 @@ export default function ViewTickets() {
         </div>
       </div>
 
-      {/* Add styles inline or in globals.css */}
       <style jsx>{`
         .navbar {
           display: flex;
